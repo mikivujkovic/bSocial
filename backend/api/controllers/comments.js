@@ -1,4 +1,5 @@
 const Comment = require("../models/comments");
+const Post = require("../models/posts");
 const { Kafka } = require("kafkajs");
 const axios = require("axios");
 
@@ -16,16 +17,28 @@ exports.addComment = (req, res) => {
     email: email,
   })
     .then(function (comment) {
-      const timestamp = comment.createdAt;
-      axios.post("http://localhost:3001/sendComment", {
-        sender: username,
-        email: email,
-        senderId: userId,
-        timestamp: timestamp,
-        postId: postId,
-        commentId: comment.id,
-        content: content,
-      });
+      Post.findAll({
+        limit: 1,
+        where: {
+          id: comment.postId,
+        },
+      })
+        .then(function (posts) {
+          const post = posts[0];
+          console.log("userId: ", post.userId);
+          const timestamp = comment.createdAt;
+          axios.post("http://localhost:3001/sendComment", {
+            sender: username,
+            email: email,
+            senderId: userId,
+            timestamp: timestamp,
+            postId: postId,
+            commentId: comment.id,
+            content: content,
+            userId: post.userId,
+          });
+        })
+        .catch((err) => console.log(err));
       res.status(200).send(comment);
     })
     .catch((err) => {

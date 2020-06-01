@@ -28,3 +28,28 @@ exports.addPost = (req, res) => {
       return res.send(err);
     });
 };
+
+exports.getUserIdforPostId = (req, res) => {
+  const postId = req.body.postId;
+  console.log("postId: ", postId);
+  Post.findAll({
+    where: {
+      postId: postId,
+    },
+  })
+    .then(function (posts) {
+      const post = posts[0];
+
+      if (post) {
+        const user = post.userId;
+        res.json({
+          userId: user,
+        });
+      } else {
+        res.json({
+          userId: -1,
+        });
+      }
+    })
+    .catch((err) => console.log(err));
+};
