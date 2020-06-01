@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const { Kafka } = require("kafkajs");
+
 const sequelize = require("./database/database");
 
 const jsonParser = bodyParser.json();
@@ -26,6 +28,40 @@ app.use("/auth", jsonParser, userRoutes);
 app.use("/post", jsonParser, postRoutes);
 app.use("/comment", jsonParser, commentRoutes);
 app.use("/follows", jsonParser, followRoutes);
+
+// Setup Kafka topics
+async function setupKafka() {
+  try {
+    const kafka = new Kafka({
+      clientId: "bSocial",
+      brokers: ["localhost:9092"],
+    });
+
+    const admin = kafka.admin();
+    await admin.connect();
+    console.log("connected to kafka");
+
+    await admin.createTopics({
+      topics: [
+        {
+          topic: "Users",
+        },
+        {
+          topic: "Comments",
+        },
+        {
+          topic: "Posts",
+        },
+      ],
+    });
+
+    console.log("topics created");
+
+    await admin.disconnect();
+  } catch (err) {
+    console.log("SOMETHING BAD HAPPENED TO KAFKA ", err);
+  }
+}
 
 // Sequelize relationships setup
 User.hasMany(Post, {
@@ -56,7 +92,8 @@ User.belongsToMany(User, {
 sequelize
   .sync({ force: false, alter: true })
   .then((result) => {
+    setupKafka();
     app.listen(3000);
-    console.log(result);
+    // console.log(result);
   })
   .catch((err) => console.log(err));

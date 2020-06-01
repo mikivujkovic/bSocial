@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const { Kafka } = require("kafkajs");
 
 exports.signup = (req, res) => {
   const email = req.body.email;
@@ -18,7 +19,15 @@ exports.signup = (req, res) => {
     password: hashedPass,
   })
     .then(function (user) {
-      res.sendStatus(201);
+      const date = user.createdAt.toString().split("T")[0];
+      axios.post("http://localhost:3001/sendUser", {
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        email: email,
+        date: date,
+      });
+      res.status(200).send(user);
     })
     .catch((err) => {
       res.send(err);

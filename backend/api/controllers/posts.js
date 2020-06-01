@@ -1,4 +1,5 @@
 const Post = require("../models/posts");
+const { Kafka } = require("kafkajs");
 
 exports.addPost = (req, res) => {
   const userId = req.body.userId;
@@ -11,7 +12,18 @@ exports.addPost = (req, res) => {
     username: username,
     email: email,
   })
-    .then(res.status(200).send("Post created"))
+    .then(async function (post) {
+      const timestamp = post.createdAt;
+      axios.post("http://localhost:3001/sendPost", {
+        username: username,
+        email: email,
+        userId: userId,
+        timestamp: timestamp,
+        postId: post.id,
+        content: message,
+      });
+      res.status(200).send(post);
+    })
     .catch((err) => {
       return res.send(err);
     });
