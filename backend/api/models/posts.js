@@ -14,6 +14,8 @@ const Post = sequelize.define("post", {
     allowNull: false,
   },
   userId: Sequelize.INTEGER,
+  username: Sequelize.STRING,
+  email: Sequelize.STRING,
 });
 
 module.exports = Post;

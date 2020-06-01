@@ -15,6 +15,8 @@ const Comment = sequelize.define("comment", {
   },
   postId: Sequelize.INTEGER,
   userId: Sequelize.INTEGER,
+  username: Sequelize.STRING,
+  email: Sequelize.STRING,
 });
 
 module.exports = Comment;
