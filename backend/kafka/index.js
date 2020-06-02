@@ -1,12 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const { Kafka } = require("kafkajs");
 
 const app = express();
 
-const server = require("http").createServer(app);
+app.use(cors());
 
-const io = require("socket.io")(server);
+const server = app.listen(3001);
+
+// const server = require("http").createServer(app);
+
+const io = require("socket.io").listen(server);
 
 const jsonParser = bodyParser.json();
 
@@ -17,6 +22,7 @@ const kafka = new Kafka({
 
 io.sockets.on("connection", function (socket) {
   socket.on("room", function (room) {
+    console.log("room: ", room);
     socket.join(room);
   });
 });
@@ -182,4 +188,4 @@ app.post("/sendPost", jsonParser, async (req, res) => {
   res.send("post sent").status(200);
 });
 
-app.listen(3001);
+// app.listen(3001);

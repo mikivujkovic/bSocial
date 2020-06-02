@@ -53,3 +53,17 @@ exports.getAllComments = (req, res) => {
     })
     .catch();
 };
+
+exports.getCommentsForPostId = (req, res) => {
+  const postId = req.body.postId;
+  console.log("postId: ", postId);
+  Comment.findAll({
+    where: {
+      postId: postId,
+    },
+  })
+    .then((comments) => {
+      res.send(comments);
+    })
+    .catch((err) => console.log(err));
+};

@@ -18,5 +18,6 @@ router.post("/test", (req, res) => {
 });
 
 router.post("/feedForId", feedCtrl.getFeedForId);
+router.post("/noFollow", feedCtrl.getPeopleNotFollow);
 
 module.exports = router;

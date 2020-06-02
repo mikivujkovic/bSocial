@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const { Kafka } = require("kafkajs");
 
@@ -21,6 +22,7 @@ const Follows = require("./models/follows");
 const auth = require("./auth/auth");
 
 const app = express();
+app.use(cors());
 
 // Routes
 app.use("/", jsonParser, feedRoutes);

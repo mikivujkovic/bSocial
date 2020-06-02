@@ -1,2 +1,4 @@
 backend/api/node_modules/
 backend/api/database.sqlite
+backend/kafka/node_modules
+backend/elasticsearch/node_modules
