@@ -5,15 +5,21 @@ import authHeader from "../services/auth-header";
 const user = JSON.parse(localStorage.getItem("user"));
 
 const Home = () => {
-  const API_URL = "http://localhost:3000/";
+  const API_URL = "http://localhost:3000/feed/";
   const [content, setContent] = useState([]);
 
   useEffect(() => {
+    const header = "Bearer " + user.token;
+    console.log("auth: ", header);
     if (user && user.id) {
       axios
         .post(
           API_URL + "feedForId",
-          { headers: authHeader() },
+          {
+            headers: {
+              Authorization: header,
+            },
+          },
           {
             data: {
               id: user.id,

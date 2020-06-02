@@ -5,7 +5,7 @@ import authHeader from "../services/auth-header";
 const user = JSON.parse(localStorage.getItem("user"));
 
 const People = () => {
-  const API_URL = "http://localhost:3000/";
+  const API_URL = "http://localhost:3000/feed/";
   const [content, setContent] = useState([]);
   const [refresh, setRefresh] = useState(false);
 

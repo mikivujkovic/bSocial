@@ -19,13 +19,13 @@ const Post = require("./models/posts");
 const Comment = require("./models/comments");
 const Follows = require("./models/follows");
 
-const auth = require("./auth/auth");
+const auth = require("./middleware/auth");
 
 const app = express();
 app.use(cors());
 
 // Routes
-app.use("/", jsonParser, feedRoutes);
+app.use("/feed", jsonParser, feedRoutes);
 app.use("/auth", jsonParser, userRoutes);
 app.use("/post", jsonParser, postRoutes);
 app.use("/comment", jsonParser, commentRoutes);
